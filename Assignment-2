@@ -1,0 +1,73 @@
+ANSWER-1:
+
+SELECT albums.Title as album_adı, count(TrackId) as track_sayısı
+
+FROM tracks
+
+INNER JOIN albums
+
+ON tracks.AlbumId = albums.AlbumId
+
+GROUP BY albums.AlbumId
+
+ORDER BY count(TrackId) DESC;
+
+
+
+ANSWER-2:
+
+SELECT albums.AlbumId as Album_No, albums.Title as Album_Adı, tracks.Name as Şarkı_Adı
+
+FROM tracks
+
+INNER JOIN albums
+
+ON tracks.AlbumId = albums.AlbumId
+
+ORDER BY albums.AlbumId;
+
+
+
+ANSWER-3:
+
+SELECT albums.AlbumId as album_id, albums.Title as album_adı, tracks.Name as parça_adı, tracks.Milliseconds as min_duration
+
+FROM tracks
+
+INNER JOIN albums
+
+ON tracks.AlbumId = albums.AlbumId
+
+GROUP BY albums.AlbumId HAVING min(Milliseconds)
+
+ORDER BY albums.AlbumId;
+
+
+
+ANSWER-4:
+
+SELECT albums.AlbumId as album_id, albums.Title as album_adı, SUM (Milliseconds) as total_duration
+
+FROM tracks
+
+INNER JOIN albums
+
+ON tracks.AlbumId = albums.AlbumId
+
+GROUP BY tracks.AlbumId, albums.Title
+
+ORDER BY Total_duration DESC;
+
+
+
+ANSWER-5:
+
+SELECT title, SUM(Milliseconds)
+
+FROM tracks
+
+INNER JOIN albums ON tracks.AlbumId = albums.AlbumId
+
+WHERE Milliseconds > 4200000
+
+GROUP BY tracks.AlbumId
