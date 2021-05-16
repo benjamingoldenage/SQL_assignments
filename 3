@@ -1,0 +1,59 @@
+-- Single-Row Subqueries:
+--1
+SELECT TrackId, name, max(Milliseconds)
+FROM tracks;
+
+--2
+SELECT TrackId, name, min(Milliseconds)
+FROM tracks;
+
+--3
+SELECT TrackId,Name,Bytes,(SELECT AVG (Bytes)FROM tracks) AS general_average,Bytes AS higher_than_average
+FROM tracks
+WHERE higher_than_average > (SELECT avg(Bytes)AS average FROM tracks)
+ORDER BY higher_than_average DESC;
+
+-- Multiple-Row Subqueries:
+--1
+
+ALTER TABLE customers RENAME COLUMN SupportRepId to EmployeeId;
+
+SELECT CustomerId, FirstName, LastName 
+FROM customers 
+where EmployeeId in (SELECT EmployeeId from employees where FirstName in ('Jane', 'Margaret'));
+
+--2
+SELECT c.CustomerId, c.FirstName, c.LastName, e.FirstName, e.LastName
+from customers c 
+INNER JOIN employees e on c.EmployeeId=e.EmployeeId 
+WHERE e.FirstName in ('Jane', 'Margaret');
+
+--DDL (CREATE, ALTER, DELETE) and DML (SELECT, INSERT, UPDATE, DELETE) Statements
+
+--1
+
+CREATE TABLE courses
+(CourseId 'INT' PRIMARY KEY,
+CourseName 'VARCHAR(20)' NOT NULL,
+CoursePrice 'INT';
+EmployeeId 'INT',
+ FOREIGN KEY (EmployeeId)
+   REFERENCES employees(EmployeeId);
+
+--2
+
+INSERT INTO courses(CourseId, CourseName,CoursePrice, EmployeeId)
+VALUES(123,'math','750$',1),
+    (124,'science','550$',2),
+    (125,'history','900$',3),
+    (126,'chemistry','700$',4),
+    (127,'biology','750$',5);
+
+
+DELETE FROM courses WHERE CourseId=(SELECT MAX(CourseId) FROM courses);
+
+ALTER TABLE courses add StartDate INT ;
+
+ALTER TABLE courses DROP COLUMN CoursePrice;  
+
+DROP TABLE courses;
